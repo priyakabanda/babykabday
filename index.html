@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise</title>
+<style>
+@font-face {
+  font-family: 'KeeponTruckin';
+  src: url('./KeeponTruckin.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Wistania';
+  src: url('./Wistania.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+body{
+  margin:0;
+  height:100vh;
+  background: radial-gradient(circle at top, #2b1055, #1a0626);
+  font-family: 'Segoe UI', sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;   
+  overflow:hidden;         
+}
+.curved-text {
+  font-family: 'KeeponTruckin', sans-serif;
+}
+.cake-wrapper{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+
+.cake{
+  position:relative;
+  width:260px;
+  height:140px;
+  display:flex;
+  justify-content:center;
+}
+
+.plate{
+  width:300px;
+  height:25px;
+  background:#ddd;
+  border-radius:50%;
+  margin-top:-10px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.4);
+}
+
+.layer{
+  position:absolute;
+  width:100%;
+  height:60px;
+  background:#ffcad4;
+  border-radius:15px;
+  box-shadow:0 8px #f4acb7;
+}
+
+.layer.top{
+  top:0;
+  background:#ffc8dd;
+  box-shadow:0 8px #ffafcc;
+}
+
+.layer.bottom{
+  bottom:0;
+}
+
+/* Icing drip */
+.icing{
+  position:absolute;
+  top:0;
+  width:100%;
+  height:30px;
+  background:white;
+  border-radius:15px 15px 10px 10px;
+}
+
+.drip{
+  position:absolute;
+  width:20px;
+  height:25px;
+  background:white;
+  border-radius:50%;
+  top:20px;
+}
+
+.drip:nth-child(1){left:40px;}
+.drip:nth-child(2){left:100px;}
+.drip:nth-child(3){left:160px;}
+.drip:nth-child(4){left:210px;}
+
+/* Candle */
+.candles{
+  position:absolute;
+  top:-40px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:40px; /* controls spacing */
+}
+
+.candle{
+  position:relative;
+  width:12px;
+  height:40px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ffffff,
+    #ffffff 5px,
+    #ff4d6d 5px,
+    #ff4d6d 10px
+  );
+  border-radius:3px;
+}
+.main-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin-top:20px;  
+}
+
+/* Flame */
+.flame{
+  position:absolute;
+  width:14px;
+  height:20px;
+  background: radial-gradient(circle, #fff 0%, #ffae00 60%, #ff4d00 100%);
+  border-radius:50%;
+  top:-20px;
+  left:-1px;
+  animation:flicker 0.12s infinite alternate;
+}
+
+@keyframes flicker{
+  from{transform:scale(1) rotate(-2deg);}
+  to{transform:scale(1.15) rotate(2deg);}
+}
+
+/* Smoke */
+.smoke{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:rgba(200,200,200,0.7);
+  border-radius:50%;
+  top:-25px;
+  left:2px;
+  animation:smokeUp 1.5s ease forwards;
+}
+
+@keyframes smokeUp{
+  0%{opacity:1; transform:translateY(0) scale(1);}
+  100%{opacity:0; transform:translateY(-40px) scale(2);}
+}
+
+/* Text */
+.birthday-text{
+  position:absolute;
+  font-size:64px;
+  font-weight:700;
+  letter-spacing:3px;
+  color:#ffffff;
+  text-shadow:0 0 20px rgba(255,255,255,0.6);
+  top:-200px;
+  opacity:0;
+}
+
+.show{
+  animation:dropIn 1.5s cubic-bezier(.17,.67,.83,.67) forwards;
+}
+
+@keyframes dropIn{
+  to{
+    top:15%;
+    opacity:1;
+  }
+}
+
+/* Confetti */
+.confetti{
+  position:absolute;
+  width:10px;
+  height:10px;
+  background:red;
+  animation:fall linear forwards;
+}
+
+.curved-text{
+  width:90vw;
+  max-width:1000px;
+  margin-top: -100px;
+  height:auto;
+  margin-bottom:25px; 
+  opacity:0;
+  transform:scale(0.85);
+  transition:all 1.4s cubic-bezier(.17,.67,.83,.67);
+}
+.cake-wrapper{
+  margin-top:10px;
+}
+.curved-text text{
+  font-size:85px;
+  fill:#ffffff;
+  letter-spacing:6px;
+}
+
+.curved-show {
+  opacity:1;
+  transform:scale(1);
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(100vh) rotate(720deg);
+    opacity:0;
+  }
+}
+#confettiCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.message-box{
+  width:700px;
+  max-width:90vw;
+  opacity:0;
+  transform:translateY(40px);
+  transition:opacity 0.6s ease, transform 0.8s cubic-bezier(.22,1,.36,1);
+  display:none;
+  text-align:center;
+}
+
+
+.final-message{
+  font-family: 'Wistania';
+  padding:40px;
+  border-radius:20px;
+  font-size:38px;
+  line-height:1.6;
+  color:#ffffff;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.15);
+}
+
+.message-show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.cake-hide{
+  opacity:0;
+  transform:translateY(30px) scale(0.9);
+  transition:all 0.7s ease;
+}
+
+</style>
+</head>
+
+<body>
+<div class="main-container">
+  <svg class="curved-text" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <!-- Very gentle arch -->
+    <path id="curve"
+          d="M200,320 Q600,250 1000,320" />
+  </defs>
+
+  <text>
+    <textPath href="#curve" startOffset="50%" text-anchor="middle">
+      HAPPY BIRTHDAY
+    </textPath>
+  </text>
+</svg>
+
+<div class="cake-wrapper">
+
+  <div class="cake">
+    
+    <div class="layer top">
+      <div class="icing">
+        <div class="drip"></div>
+        <div class="drip"></div>
+        <div class="drip"></div>
+        <div class="drip"></div>
+      </div>
+    </div>
+
+    <div class="layer bottom"></div>
+
+    <div class="candles">
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+    </div>
+
+  </div>
+
+  <div class="plate"></div>
+
+</div>
+<div class="message-box" id="messageBox">
+  <div class="final-message">
+    Happy happy birthday my love! <br> I'm sorry I couldn't be there for today but, Let's watch a movie instead? <br>I looooooooooveeeeeeeeeeeeee you &lt;3
+  </div>
+</div>
+</div>
+
+<script>
+
+let blown = false;
+let streamRef = null;
+
+navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+  streamRef = stream;
+
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const analyser = audioContext.createAnalyser();
+  const mic = audioContext.createMediaStreamSource(stream);
+
+  mic.connect(analyser);
+  analyser.fftSize = 512; // higher resolution
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  function detect(){
+    if(blown) return;
+
+    analyser.getByteFrequencyData(dataArray);
+
+    // Stronger detection using RMS (more accurate)
+    let sum = 0;
+    for(let i=0;i<dataArray.length;i++){
+      sum += dataArray[i]*dataArray[i];
+    }
+
+    let rms = Math.sqrt(sum / dataArray.length);
+
+    if(rms > 125){   
+      blown = true;
+      blowOut();
+      stopMic();
+      return;
+    }
+
+    requestAnimationFrame(detect);
+  }
+
+  detect();
+});
+
+function stopMic(){
+  if(streamRef){
+    streamRef.getTracks().forEach(track => track.stop());
+  }
+}
+
+function blowOut(){
+  document.querySelectorAll(".flame").forEach(f=>{
+    f.style.display="none";
+    let smoke=document.createElement("div");
+    smoke.className="smoke";
+    f.parentElement.appendChild(smoke);
+  });
+
+document.querySelector(".curved-text").classList.add("curved-show");  launchConfetti();
+setTimeout(() => {
+  const cake = document.querySelector(".cake-wrapper");
+  cake.classList.add("cake-hide");
+}, 800);
+
+setTimeout(() => {
+  const cake = document.querySelector(".cake-wrapper");
+  cake.style.display = "none";
+
+  const box = document.getElementById("messageBox");
+  box.style.display = "block";
+
+  requestAnimationFrame(() => {
+    box.classList.add("message-show");
+  });
+
+}, 1500);
+}
+function launchConfetti(){
+  const canvas = document.getElementById("confettiCanvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+  const count = 90;
+
+  for(let i=0;i<count;i++){
+    pieces.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height - canvas.height,
+      r: Math.random()*6+4,
+      d: Math.random()*count,
+      color: `hsl(${Math.random()*360},80%,60%)`,
+      tilt: Math.random()*10-10,
+      tiltAngle: 0,
+      tiltAngleInc: Math.random()*0.07 + 0.05,
+      speed: Math.random()*3+2
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    pieces.forEach(p=>{
+      ctx.beginPath();
+      ctx.lineWidth = p.r;
+      ctx.strokeStyle = p.color;
+      ctx.moveTo(p.x + p.tilt + p.r/3, p.y);
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r/5);
+      ctx.stroke();
+    });
+
+    update();
+  }
+
+  function update(){
+    pieces.forEach(p=>{
+      p.tiltAngle += p.tiltAngleInc;
+      p.y += p.speed;
+      p.tilt = Math.sin(p.tiltAngle)*15;
+
+      if(p.y > canvas.height){
+        p.y = -20;
+        p.x = Math.random()*canvas.width;
+      }
+    });
+  }
+
+  function animate(){
+    draw();
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+</script>
+<canvas id="confettiCanvas"></canvas>
+</body>
+</html>
